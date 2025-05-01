@@ -96,7 +96,7 @@ Follow our [GitHub Pages Setup Guide](https://docs.github.com/en/pages/getting-s
 | 55-150       | Unhealthy      | Health effects possible for everyone |
 | >150         | Very Unhealthy | Health warnings, emergency conditions |
 
-For more detailed reference values, check our [Air Quality Reference Guide](air-quality-reference.md).
+For more detailed reference values, check our [Air Quality Reference Guide](https://www.who.int/news-room/feature-stories/detail/what-are-the-who-air-quality-guidelines).
 
 ## Project Operation
 

@@ -144,7 +144,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Contributors
 
-- Your Name - Initial work
+- benb0jangles - Initial work
 
 ## Support
 

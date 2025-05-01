@@ -1,4 +1,4 @@
-javascript
+
 // ThingSpeak Channel Configuration
 const channelID = '2944234';  // Replace with your channel ID
 const readAPIKey = 'Y23QWWN6OI2NLQ5E'; // Replace with your Read API Key

@@ -100,7 +100,7 @@ For more detailed reference values, check our [Air Quality Reference Guide](http
 
 ## Project Operation
 
-1. **Power up**: Connect the ESP32-C3 to power
+1. **Power up**: Connect the ESP32-C3 to power using the micro usb side
 2. **Initialization**: System initializes the sensors and WiFi connection
 3. **Measurement**: Sensors continuously measure environmental parameters
 4. **Display**: OLED screen shows current readings

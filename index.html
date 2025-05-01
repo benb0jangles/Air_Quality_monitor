@@ -1,116 +1,112 @@
-
-
-
-
-    
-    
-    Environmental Monitor Dashboard
-    
-    
-    
-    
-    
-
-
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environmental Monitor Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Environmental Monitor Dashboard</h1>
+            <p>Last updated: <span id="last-update">Loading...</span></p>
+        </header>
         
-            Environmental Monitor Dashboard
-            Last updated: Loading...
+        <div class="dashboard">
+            <div class="card">
+                <h2>CO2 Levels</h2>
+                <div class="chart-container">
+                    <canvas id="co2-chart"></canvas>
+                </div>
+                <div class="current-value">
+                    <span id="current-co2">--</span> ppm
+                </div>
+                <div class="status" id="co2-status">--</div>
+            </div>
+            
+            <div class="card">
+                <h2>Temperature</h2>
+                <div class="chart-container">
+                    <canvas id="temp-chart"></canvas>
+                </div>
+                <div class="current-value">
+                    <span id="current-temp">--</span> °C
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Humidity</h2>
+                <div class="chart-container">
+                    <canvas id="humidity-chart"></canvas>
+                </div>
+                <div class="current-value">
+                    <span id="current-humidity">--</span> %
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Air Quality (VOC)</h2>
+                <div class="chart-container">
+                    <canvas id="voc-chart"></canvas>
+                </div>
+                <div class="current-value">
+                    <span id="current-voc">--</span>
+                </div>
+                <div class="status" id="voc-status">--</div>
+            </div>
+            
+            <div class="card">
+                <h2>Air Quality (NOx)</h2>
+                <div class="chart-container">
+                    <canvas id="nox-chart"></canvas>
+                </div>
+                <div class="current-value">
+                    <span id="current-nox">--</span>
+                </div>
+                <div class="status" id="nox-status">--</div>
+            </div>
+            
+            <div class="card">
+                <h2>Particulate Matter (PM2.5)</h2>
+                <div class="chart-container">
+                    <canvas id="pm25-chart"></canvas>
+                </div>
+                <div class="current-value">
+                    <span id="current-pm25">--</span> μg/m³
+                </div>
+                <div class="status" id="pm25-status">--</div>
+            </div>
+            
+            <div class="card">
+                <h2>Particulate Matter (PM10)</h2>
+                <div class="chart-container">
+                    <canvas id="pm10-chart"></canvas>
+                </div>
+                <div class="current-value">
+                    <span id="current-pm10">--</span> μg/m³
+                </div>
+                <div class="status" id="pm10-status">--</div>
+            </div>
+            
+            <div class="card">
+                <h2>Particulate Matter (PM1.0)</h2>
+                <div class="chart-container">
+                    <canvas id="pm1-chart"></canvas>
+                </div>
+                <div class="current-value">
+                    <span id="current-pm1">--</span> μg/m³
+                </div>
+            </div>
+        </div>
         
-        
-        
-            
-                CO2 Levels
-                
-                    
-                
-                
-                    -- ppm
-                
-                --
-            
-            
-            
-                Temperature
-                
-                    
-                
-                
-                    -- °C
-                
-            
-            
-            
-                Humidity
-                
-                    
-                
-                
-                    -- %
-                
-            
-            
-            
-                Air Quality (VOC)
-                
-                    
-                
-                
-                    --
-                
-                --
-            
-            
-            
-                Air Quality (NOx)
-                
-                    
-                
-                
-                    --
-                
-                --
-            
-            
-            
-                Particulate Matter (PM2.5)
-                
-                    
-                
-                
-                    -- μg/m³
-                
-                --
-            
-            
-            
-                Particulate Matter (PM10)
-                
-                    
-                
-                
-                    -- μg/m³
-                
-                --
-            
-            
-            
-                Particulate Matter (PM1.0)
-                
-                    
-                
-                
-                    -- μg/m³
-                
-            
-        
-        
-        
-            Powered by ESP32-C3 with SCD41, SGP41, and PMS5003 sensors | Data stored on ThingSpeak
-        
+        <footer>
+            <p>Powered by ESP32-C3 with SCD41, SGP41, and PMS5003 sensors | Data stored on ThingSpeak</p>
+        </footer>
+    </div>
     
-    
-    
-
-
-
+    <script src="script.js"></script>
+</body>
+</html>

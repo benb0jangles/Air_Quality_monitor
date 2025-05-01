@@ -52,7 +52,7 @@ Before uploading the code, you need to:
 3. Get your ThingSpeak channel ID and API keys
 4. Update the configuration in the Arduino code
 
-Follow our [ThingSpeak Setup Guide](thingspeak-setup.md) for detailed instructions.
+Follow our [ThingSpeak Setup Guide]([thingspeak-setup.md](https://uk.mathworks.com/help/thingspeak/getting-started-with-thingspeak.html)) for detailed instructions.
 
 ### GitHub Pages Dashboard
 

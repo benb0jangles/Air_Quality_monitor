@@ -1,3 +1,177 @@
 # Air_Quality_monitor
 live data for C02/VOC/N0x/Dust_Particulate
 https://benb0jangles.github.io/Air_Quality_monitor/
+
+# ESP32-C3 Environmental Monitoring System
+
+![Environmental Monitor Banner](https://via.placeholder.com/800x200?text=Environmental+Monitor)
+
+A comprehensive indoor air quality monitoring system built with ESP32-C3 Super Mini and multiple environmental sensors. This project helps you monitor CO2, temperature, humidity, volatile organic compounds (VOCs), nitrogen oxides (NOx), and particulate matter (PM1.0, PM2.5, PM10) to maintain healthy air quality in your home or office.
+
+## Features
+
+- **Multi-sensor Integration**: Combines SCD41 (CO2/temp/humidity), SGP41 (VOC/NOx), and PMS5003 (particulate matter) for comprehensive environmental monitoring
+- **Real-time Data Display**: Toggleable OLED screen interface with multiple views
+- **Cloud Storage**: ThingSpeak integration for data logging and visualization
+- **Web Dashboard**: GitHub Pages-based responsive dashboard for remote monitoring
+- **Air Quality Assessment**: Shows air quality status based on established health standards
+- **ESP32-C3 Based**: Low-power, compact, and WiFi-enabled design
+- **Button Navigation**: Easy toggle between different sensor readings via a physical button
+
+## Hardware Requirements
+
+- ESP32-C3 Super Mini development board
+- SCD41 CO2, Temperature and Humidity sensor
+- SGP41 VOC and NOx sensor
+- PMS5003 Particulate Matter sensor
+- 128×64 OLED display (I2C interface)
+- Momentary push button
+- Connecting wires
+- 5V power supply
+
+## Wiring Diagram
+
+```
+ESP32-C3 Super Mini  <-->  SCD41 & SGP41 (I2C)
+  GPIO8 (SDA)        <-->  SDA
+  GPIO9 (SCL)        <-->  SCL
+  3.3V               <-->  VCC
+  GND                <-->  GND
+
+ESP32-C3 Super Mini  <-->  OLED Display (I2C)
+  GPIO8 (SDA)        <-->  SDA
+  GPIO9 (SCL)        <-->  SCL
+  3.3V               <-->  VCC
+  GND                <-->  GND
+
+ESP32-C3 Super Mini  <-->  PMS5003 (UART)
+  GPIO20 (RX)        <-->  TX
+  GPIO21 (TX)        <-->  RX
+  5V                 <-->  VCC
+  GND                <-->  GND
+
+ESP32-C3 Super Mini  <-->  Button
+  GPIO0              <-->  One pin of button
+  GND                <-->  Other pin of button
+```
+
+## Software Setup
+
+### Required Libraries
+
+- Arduino IDE
+- Adafruit SSD1306 (for OLED display)
+- Adafruit GFX Library
+- Sensirion I2C SCD4x
+- Sensirion I2C SGP41
+- Sensirion Gas Index Algorithm
+- PMS Library (for PMS5003)
+- WiFi (built-in with ESP32)
+- ThingSpeak
+
+### ThingSpeak Configuration
+
+Before uploading the code, you need to:
+
+1. Create a free ThingSpeak account
+2. Create a new channel with 8 fields (CO2, temperature, humidity, VOC, NOx, PM2.5, PM10, PM1.0)
+3. Get your ThingSpeak channel ID and API keys
+4. Update the configuration in the Arduino code
+
+Follow our [ThingSpeak Setup Guide](thingspeak-setup.md) for detailed instructions.
+
+### GitHub Pages Dashboard
+
+This repository includes a web dashboard that can be deployed to GitHub Pages to visualize your sensor data from anywhere:
+
+1. Fork this repository
+2. Enable GitHub Pages in your repository settings
+3. Update the ThingSpeak channel ID and read API key in the script.js file
+4. Access your dashboard at `https://[your-username].github.io/[repository-name]/`
+
+Follow our [GitHub Pages Setup Guide](github-pages-setup.md) for detailed instructions.
+
+## Understanding Air Quality Values
+
+### CO2 Levels
+
+| CO2 (ppm) | Classification | Effects |
+|-----------|---------------|---------|
+| 400-800   | Excellent     | Optimal indoor air quality |
+| 800-1000  | Good          | Acceptable air quality |
+| 1000-1500 | Moderate      | Noticeable air quality issues |
+| >1500     | Poor          | Poor air quality, health concerns |
+
+### VOC and NOx Index
+
+| Index | Classification | Interpretation |
+|-------|---------------|----------------|
+| 0-50  | Excellent     | Very clean air |
+| 50-100| Good          | Good air quality |
+| 100-200| Moderate     | Moderate pollution |
+| 200-300| Poor         | Poor air quality |
+| >300  | Very Poor     | Significant air pollution |
+
+### Particulate Matter (PM2.5)
+
+| PM2.5 (μg/m³) | Classification | Health Implications |
+|--------------|----------------|---------------------|
+| 0-12         | Good           | Little to no risk |
+| 12-35        | Moderate       | Acceptable quality |
+| 35-55        | Unhealthy for Sensitive Groups | May affect sensitive groups |
+| 55-150       | Unhealthy      | Health effects possible for everyone |
+| >150         | Very Unhealthy | Health warnings, emergency conditions |
+
+For more detailed reference values, check our [Air Quality Reference Guide](air-quality-reference.md).
+
+## Project Operation
+
+1. **Power up**: Connect the ESP32-C3 to power
+2. **Initialization**: System initializes the sensors and WiFi connection
+3. **Measurement**: Sensors continuously measure environmental parameters
+4. **Display**: OLED screen shows current readings
+5. **Navigation**: Press the button to toggle between:
+   - View 1: CO2, temperature, and humidity
+   - View 2: VOC and NOx indices
+   - View 3: Particulate matter readings
+6. **Cloud Upload**: Data is automatically uploaded to ThingSpeak every minute
+7. **Web Dashboard**: Access your data remotely through the GitHub Pages dashboard
+
+## Expanding the Project
+
+Some ideas for expanding this project:
+
+- Add a buzzer for alerts when air quality deteriorates
+- Integrate with home automation systems (MQTT, Home Assistant)
+- Add email or push notifications for air quality warnings
+- Create a 3D-printed enclosure for the device
+- Add a BME680 sensor for additional gas sensing capabilities
+- Implement power management for battery operation
+
+## Troubleshooting
+
+- **No sensor readings**: Check wiring and I2C addresses
+- **WiFi connection issues**: Verify WiFi credentials and signal strength
+- **ThingSpeak upload fails**: Check API key and channel ID, ensure you're not exceeding rate limits
+- **OLED display not working**: Verify I2C address (typically 0x3C or 0x3D)
+- **Button not responding**: Check wiring and ensure pin has pull-up resistor enabled
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgements
+
+- Sensirion for the SCD41 and SGP41
+- Plantower for the PMS5003
+- Adafruit for the display libraries
+- ThingSpeak for the IoT platform
+- All contributors to the open-source libraries used in this project
+
+## Contributors
+
+- Your Name - Initial work
+
+## Support
+
+If you find this project helpful, consider starring the repository and sharing it with others!

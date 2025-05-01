@@ -63,7 +63,7 @@ This repository includes a web dashboard that can be deployed to GitHub Pages to
 3. Update the ThingSpeak channel ID and read API key in the script.js file
 4. Access your dashboard at `https://[your-username].github.io/[repository-name]/`
 
-Follow our [GitHub Pages Setup Guide](github-pages-setup.md) for detailed instructions.
+Follow our [GitHub Pages Setup Guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) for detailed instructions.
 
 ## Understanding Air Quality Values
 

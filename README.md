@@ -29,32 +29,6 @@ A comprehensive indoor air quality monitoring system built with ESP32-C3 Super M
 - Connecting wires
 - 5V power supply
 
-## Wiring Diagram
-
-```
-ESP32-C3 Super Mini  <-->  SCD41 & SGP41 (I2C)
-  GPIO8 (SDA)        <-->  SDA
-  GPIO9 (SCL)        <-->  SCL
-  3.3V               <-->  VCC
-  GND                <-->  GND
-
-ESP32-C3 Super Mini  <-->  OLED Display (I2C)
-  GPIO8 (SDA)        <-->  SDA
-  GPIO9 (SCL)        <-->  SCL
-  3.3V               <-->  VCC
-  GND                <-->  GND
-
-ESP32-C3 Super Mini  <-->  PMS5003 (UART)
-  GPIO20 (RX)        <-->  TX
-  GPIO21 (TX)        <-->  RX
-  5V                 <-->  VCC
-  GND                <-->  GND
-
-ESP32-C3 Super Mini  <-->  Button
-  GPIO0              <-->  One pin of button
-  GND                <-->  Other pin of button
-```
-
 ## Software Setup
 
 ### Required Libraries

@@ -7,10 +7,15 @@ https://benb0jangles.github.io/Air_Quality_monitor/
 ![Environmental Monitor Banner](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/air_quality_banner_base.png)
 
 ![monitor_image1](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/IMG_20250502_120009_Bokeh%20(Small).jpg)
+
 #C02 screen
+
 ![monitor_gif1](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/1_1.gif)
+
 #PM Particulates Screen
+
 ![monitor_gif2](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/3.gif)
+
 #VOC + N0x screen
 
 

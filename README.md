@@ -40,7 +40,7 @@ A comprehensive indoor air quality monitoring system built with ESP32-C3 Super M
 - 128×64 OLED display (I2C interface) (£1.64 1pcs)
 - Momentary push button (£1 10pcs)
 - 5V micro usb power supply
-BOM Total = £36.63
+- BOM Total = £36.63
 
 ## Software Setup
 

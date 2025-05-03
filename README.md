@@ -33,14 +33,14 @@ A comprehensive indoor air quality monitoring system built with ESP32-C3 Super M
 
 ## Hardware Requirements
 
-- ESP32-C3 Super Mini development board
-- SCD41 CO2, Temperature and Humidity sensor
-- SGP41 VOC and NOx sensor
-- PMS5003 Particulate Matter sensor
-- 128×64 OLED display (I2C interface)
-- Momentary push button
-- Connecting wires
-- 5V power supply
+- ESP32-C3 Super Mini development board (£1.64 1pcs)
+- SCD41 CO2, Temperature and Humidity sensor (£12.99 1pcs)
+- SGP41 VOC and NOx sensor (£8.72 1pcs)
+- PMS5003 Particulate Matter sensor (£10.60 1pcs)
+- 128×64 OLED display (I2C interface) (£1.64 1pcs)
+- Momentary push button (£1 10pcs)
+- 5V micro usb power supply
+BOM Total = £36.63
 
 ## Software Setup
 

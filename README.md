@@ -7,8 +7,11 @@ https://benb0jangles.github.io/Air_Quality_monitor/
 ![Environmental Monitor Banner](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/air_quality_banner_base.png)
 
 ![monitor_image1](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/IMG_20250502_120009_Bokeh%20(Small).jpg)
-
+C02 screen
 ![monitor_gif1](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/1_1.gif)
+PM Particulates Screen
+![monitor_gif2](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/3.gif)
+VOC + N0x screen
 
 
 A comprehensive indoor air quality monitoring system built with ESP32-C3 Super Mini and multiple environmental sensors. This project helps you monitor CO2, temperature, humidity, volatile organic compounds (VOCs), nitrogen oxides (NOx), and particulate matter (PM1.0, PM2.5, PM10) to maintain healthy air quality in your home or office. You can buy a pcb sensor board here: (coming soon)

@@ -44,7 +44,7 @@ A comprehensive indoor air quality monitoring system built with ESP32-C3 Super M
 
 ## Software Setup
 
-## Installation (non-iot version- no wifi or thingspeak connectivity, just oled display
+## Installation (non-iot version- no wifi or thingspeak connectivity, just oled display)
 
 ### Direct Binary Upload:
 If you just want to get the monitor running without compiling code:

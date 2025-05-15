@@ -44,17 +44,21 @@ A comprehensive indoor air quality monitoring system built with ESP32-C3 Super M
 
 ## Software Setup
 
-### Required Libraries
+## Installation (non-iot version- no wifi or thingspeak connectivity, just oled display
 
-- Arduino IDE
-- Adafruit SSD1306 (for OLED display)
-- Adafruit GFX Library
-- Sensirion I2C SCD4x
-- Sensirion I2C SGP41
-- Sensirion Gas Index Algorithm
-- PMS Library (for PMS5003)
-- WiFi (built-in with ESP32)
-- ThingSpeak
+### Direct Binary Upload:
+If you just want to get the monitor running without compiling code:
+
+1. Download `esp32c3supermini_scd41_sgp41_pms5003_oled_no_IOT.ino.bin` from this repository
+2. Connect your ESP32-C3 Super Mini to your computer
+3. Use one of these tools to flash the binary:
+   - **ESP Flash Tool**: Upload to address 0x0
+   - **esptool.py** (command line): 
+     ```
+     esptool.py --chip esp32c3 --port [YOUR_COM_PORT] --baud 460800 write_flash 0x0 esp32c3supermini_scd41_sgp41_pms5003_oled_no_IOT.ino.bin
+     ```
+
+## Installation (thingspeak iot version - oled + wifi connectivity + thingspeak) *COMING SOON*
 
 ### ThingSpeak Configuration
 

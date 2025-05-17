@@ -1,5 +1,5 @@
 # Air_Quality_monitor
-live data here>>>>> for C02/VOC/N0x/Dust_Particulate
+live data here>>>>> for C02/VOC/N0x/Dust_Particulate (ctrl + click open in new tab)
 https://benb0jangles.github.io/Air_Quality_monitor/
 
 # ESP32-C3 Environmental Monitoring System

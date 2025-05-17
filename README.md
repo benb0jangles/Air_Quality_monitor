@@ -32,17 +32,14 @@ A comprehensive indoor air quality monitoring system built with ESP32-C3 Super M
 
 - PCB DIY Kit No Sensors No Esp32 Buy Here: (Link Coming Soon)
 - PCB Pre-Soldered Board No Sensors or Esp32: (Link Coming Soon)
-- PCB Full Soldered Board With Sensors & Esp32 (Link Coming Soon)
-- 
-- Print your own mount pcb holder (Look in the folder called STL)
-- ESP32-C3 Super Mini development board (£1.64 1pcs)
-- SCD41 CO2, Temperature and Humidity sensor (£12.99 1pcs)
-- SGP41 VOC and NOx sensor (£8.72 1pcs)
-- PMS5003 Particulate Matter sensor (£10.60 1pcs)
-- 128×64 OLED display (I2C interface) (£1.64 1pcs)
-- Momentary push button (£1 10pcs)
-- 5V micro usb power supply
-- BOM Total = £36.63
+- 3d-Print your own mount (Look in the folder called STL)
+- ESP32-C3 Super Mini development board (£1.64)
+- SCD41 CO2, Temperature and Humidity sensor (£12.99)
+- SGP41 VOC and NOx sensor (£8.72)
+- PMS5003 Particulate Matter sensor (£10.60)
+- 128×64 OLED display (I2C interface) (£1.64)
+- 5V micro usb power supply (wall adapter or battery bank)
+
 
 ## Software Setup
 

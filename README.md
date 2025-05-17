@@ -38,7 +38,7 @@ A comprehensive indoor air quality monitoring system built with ESP32-C3 Super M
 - PCB Pre-Soldered Board No Sensors or Esp32: (Link Coming Soon)
 - PCB Full Soldered Board With Sensors & Esp32 (Link Coming Soon)
 - 
--
+- Print your own mount pcb holder (Look in the folder called STL)
 - ESP32-C3 Super Mini development board (£1.64 1pcs)
 - SCD41 CO2, Temperature and Humidity sensor (£12.99 1pcs)
 - SGP41 VOC and NOx sensor (£8.72 1pcs)

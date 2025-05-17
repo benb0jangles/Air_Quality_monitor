@@ -1,10 +1,11 @@
+![Environmental Monitor Banner](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/banner1.jpg)
+
 # Air_Quality_monitor
 live data here>>>>> for C02/VOC/N0x/Dust_Particulate (ctrl + click open in new tab)
 https://benb0jangles.github.io/Air_Quality_monitor/
 
 # ESP32-C3 Environmental Monitoring System
 
-![Environmental Monitor Banner](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/banner1.jpg)
 
 ![monitor_image1](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/IMG_20250502_120009_Bokeh%20(Small).jpg)
 

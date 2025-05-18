@@ -30,7 +30,7 @@ A comprehensive indoor air quality monitoring system built with ESP32-C3 Super M
 
 ## Hardware Requirements
 
-- PCB DIY Kit No Sensors No Esp32 Buy Here: (Link Coming Soon)
+- PCB DIY Kit No Sensors No Esp32 Buy Here: [Buy Link Here](https://www.ebay.co.uk/itm/197329869838)
 - PCB Pre-Soldered Board No Sensors or Esp32: (Link Coming Soon)
 - 3d-Print your own mount (Look in the folder called STL)
 - ESP32-C3 Super Mini development board (£1.64)

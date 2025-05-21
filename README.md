@@ -104,14 +104,14 @@ When you first power up the device, it automatically enters setup mode:
 - Open any web browser and go to: http://192.168.4.1
 - You'll see a configuration form to enter:
 
--Your home WiFi network name
--Your home WiFi password
--Your ThingSpeak Channel ID
--Your ThingSpeak Write API Key
+- Your home WiFi network name
+- Your home WiFi password
+- Your ThingSpeak Channel ID
+- Your ThingSpeak Write API Key
 
 
-6)After saving, the device will restart and connect to your WiFi network
-7)The OLED will now show sensor readings (or "No sensors" if sensors aren't connected yet)
+- After saving, the device will restart and connect to your WiFi network
+- The OLED will now show sensor readings (or "No sensors" if sensors aren't connected yet)
 
 ### Re-entering Setup Mode
 If you need to change WiFi settings later:

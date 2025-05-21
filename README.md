@@ -81,19 +81,19 @@ This repository includes a web dashboard that can be deployed to GitHub Pages to
 
 Follow our [GitHub Pages Setup Guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) for detailed instructions.
 
-### Using the Pre-compiled Binary
-- Download the .bin file from the releases section
-- Flash the binary to your ESP32-C3 using one of these methods:
-- Using esptool.py:
-esptool.py --chip esp32c3 --port [YOUR_PORT] --baud 460800 write_flash 0x0 air_quality_monitor_esp32c3.bin
+## Installation (iot version using wifi & thingspeak connectivity with oled display)
 
-### Using ESP Flash Download Tool:
-- Download from: https://www.espressif.com/en/support/download/other-tools
-- Select the correct chip (ESP32-C3)
-- Add the bin file at address 0x0
-- Configure flash options (SPI SPEED: 40MHz, SPI MODE: DIO)
-- Select the correct COM port
-- Click "Start" to flash
+### Direct Binary Upload:
+If you want to get iot thingspeak connectivity running without compiling code:
+
+1. Download `esp32c3supermini_scd41_sgp41_pms5003_oled_ble_webserver.ino.bin` from this repository
+2. Connect your ESP32-C3 Super Mini to your computer
+3. Use one of these tools to flash the binary:
+   - **ESP Flash Tool**: Upload to address 0x0
+   - **esptool.py** (command line): 
+     ```
+     esptool.py --chip esp32c3 --port [YOUR_COM_PORT] --baud 460800 write_flash 0x0 esp32c3supermini_scd41_sgp41_pms5003_oled_ble_webserver.ino.bin
+     ```
 
 ### First-Time Setup (WiFi Configuration Portal)
 When you first power up the device, it automatically enters setup mode:
@@ -115,17 +115,17 @@ When you first power up the device, it automatically enters setup mode:
 
 ### Re-entering Setup Mode
 If you need to change WiFi settings later:
-Method 1 (With Button):
-Press and hold the button for 3+ seconds
-The device will restart in setup mode
+- Method 1 (With Button):
+- Press and hold the button for 3+ seconds
+- The device will restart in setup mode
 
 Method 2 (Without Button):
-Power-cycle the device (disconnect and reconnect power)
-Within 5 seconds, quickly press the button 3 times
-The device will enter setup mode
+- Power-cycle the device (disconnect and reconnect power)
+- Within 5 seconds, quickly press the button 3 times
+- The device will enter setup mode
 
 Method 3 (Manual Reset):
-If methods 1-2 don't work, you can always re-flash the device with the original binary file.
+- If methods 1-2 don't work, you can always re-flash the device with the original binary file.
 
 ## Understanding Air Quality Values
 

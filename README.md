@@ -81,13 +81,13 @@ This repository includes a web dashboard that can be deployed to GitHub Pages to
 
 Follow our [GitHub Pages Setup Guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) for detailed instructions.
 
-Using the Pre-compiled Binary
+### Using the Pre-compiled Binary
 1)Download the .bin file from the releases section
 2)Flash the binary to your ESP32-C3 using one of these methods:
 Using esptool.py:
 esptool.py --chip esp32c3 --port [YOUR_PORT] --baud 460800 write_flash 0x0 air_quality_monitor_esp32c3.bin
 
-Using ESP Flash Download Tool:
+### Using ESP Flash Download Tool:
 1)Download from: https://www.espressif.com/en/support/download/other-tools
 2)Select the correct chip (ESP32-C3)
 3)Add the bin file at address 0x0
@@ -95,7 +95,7 @@ Using ESP Flash Download Tool:
 5)Select the correct COM port
 6)Click "Start" to flash
 
-#First-Time Setup (WiFi Configuration Portal)
+### First-Time Setup (WiFi Configuration Portal)
 When you first power up the device, it automatically enters setup mode:
 
 1)The OLED display will show "SETUP MODE" with connection instructions
@@ -113,7 +113,7 @@ When you first power up the device, it automatically enters setup mode:
 6)After saving, the device will restart and connect to your WiFi network
 7)The OLED will now show sensor readings (or "No sensors" if sensors aren't connected yet)
 
-#Re-entering Setup Mode
+### Re-entering Setup Mode
 If you need to change WiFi settings later:
 Method 1 (With Button):
 Press and hold the button for 3+ seconds

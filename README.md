@@ -81,8 +81,7 @@ This repository includes a web dashboard that can be deployed to GitHub Pages to
 
 Follow our [GitHub Pages Setup Guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) for detailed instructions.
 
-## Installation (iot version using wifi & thingspeak connectivity with oled display)
-
+## Esp32 Code Installation
 ### Direct Binary Upload:
 If you want to get iot thingspeak connectivity running without compiling code:
 

@@ -66,7 +66,7 @@ Before uploading the code, you need to:
 1. Create a free ThingSpeak account
 2. Create a new channel with 8 fields (CO2, temperature, humidity, VOC, NOx, PM2.5, PM10, PM1.0)
 3. Get your ThingSpeak channel ID and API keys
-4. Input the credentials in the webserver
+4. Input the credentials in the esp32 startup webserver
 
 Follow our [ThingSpeak Setup Guide](https://uk.mathworks.com/help/thingspeak/getting-started-with-thingspeak.html) for detailed instructions.
 

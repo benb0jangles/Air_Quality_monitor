@@ -82,27 +82,27 @@ This repository includes a web dashboard that can be deployed to GitHub Pages to
 Follow our [GitHub Pages Setup Guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) for detailed instructions.
 
 ### Using the Pre-compiled Binary
-1)Download the .bin file from the releases section
-2)Flash the binary to your ESP32-C3 using one of these methods:
-Using esptool.py:
+- Download the .bin file from the releases section
+- Flash the binary to your ESP32-C3 using one of these methods:
+- Using esptool.py:
 esptool.py --chip esp32c3 --port [YOUR_PORT] --baud 460800 write_flash 0x0 air_quality_monitor_esp32c3.bin
 
 ### Using ESP Flash Download Tool:
-1)Download from: https://www.espressif.com/en/support/download/other-tools
-2)Select the correct chip (ESP32-C3)
-3)Add the bin file at address 0x0
-4)Configure flash options (SPI SPEED: 40MHz, SPI MODE: DIO)
-5)Select the correct COM port
-6)Click "Start" to flash
+- Download from: https://www.espressif.com/en/support/download/other-tools
+- Select the correct chip (ESP32-C3)
+- Add the bin file at address 0x0
+- Configure flash options (SPI SPEED: 40MHz, SPI MODE: DIO)
+- Select the correct COM port
+- Click "Start" to flash
 
 ### First-Time Setup (WiFi Configuration Portal)
 When you first power up the device, it automatically enters setup mode:
 
-1)The OLED display will show "SETUP MODE" with connection instructions
-2)Look for a WiFi network named "EnvMonitor-XXXX" (XXXX = last digits of device MAC address)
-3)Connect to this network using the password: envmonitor
-4)Open any web browser and go to: http://192.168.4.1
-5)You'll see a configuration form to enter:
+- The OLED display will show "SETUP MODE" with connection instructions
+- Look for a WiFi network named "EnvMonitor-XXXX" (XXXX = last digits of device MAC address)
+- Connect to this network using the password: envmonitor
+- Open any web browser and go to: http://192.168.4.1
+- You'll see a configuration form to enter:
 
 -Your home WiFi network name
 -Your home WiFi password

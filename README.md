@@ -57,7 +57,7 @@ If you just want to get the monitor running without compiling code:
      esptool.py --chip esp32c3 --port [YOUR_COM_PORT] --baud 460800 write_flash 0x0 esp32c3supermini_scd41_sgp41_pms5003_oled_no_IOT.ino.bin
      ```
 
-## Installation (thingspeak iot version - oled + wifi connectivity + thingspeak) *COMING SOON*
+## Installation (thingspeak iot version - oled + wifi connectivity + thingspeak)
 
 ### ThingSpeak Configuration
 
@@ -80,6 +80,52 @@ This repository includes a web dashboard that can be deployed to GitHub Pages to
 4. Access your dashboard at `https://[your-username].github.io/[repository-name]/`
 
 Follow our [GitHub Pages Setup Guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site) for detailed instructions.
+
+Using the Pre-compiled Binary
+1)Download the .bin file from the releases section
+2)Flash the binary to your ESP32-C3 using one of these methods:
+Using esptool.py:
+esptool.py --chip esp32c3 --port [YOUR_PORT] --baud 460800 write_flash 0x0 air_quality_monitor_esp32c3.bin
+
+Using ESP Flash Download Tool:
+1)Download from: https://www.espressif.com/en/support/download/other-tools
+2)Select the correct chip (ESP32-C3)
+3)Add the bin file at address 0x0
+4)Configure flash options (SPI SPEED: 40MHz, SPI MODE: DIO)
+5)Select the correct COM port
+6)Click "Start" to flash
+
+#First-Time Setup (WiFi Configuration Portal)
+When you first power up the device, it automatically enters setup mode:
+
+1)The OLED display will show "SETUP MODE" with connection instructions
+2)Look for a WiFi network named "EnvMonitor-XXXX" (XXXX = last digits of device MAC address)
+3)Connect to this network using the password: envmonitor
+4)Open any web browser and go to: http://192.168.4.1
+5)You'll see a configuration form to enter:
+
+-Your home WiFi network name
+-Your home WiFi password
+-Your ThingSpeak Channel ID
+-Your ThingSpeak Write API Key
+
+
+6)After saving, the device will restart and connect to your WiFi network
+7)The OLED will now show sensor readings (or "No sensors" if sensors aren't connected yet)
+
+#Re-entering Setup Mode
+If you need to change WiFi settings later:
+Method 1 (With Button):
+Press and hold the button for 3+ seconds
+The device will restart in setup mode
+
+Method 2 (Without Button):
+Power-cycle the device (disconnect and reconnect power)
+Within 5 seconds, quickly press the button 3 times
+The device will enter setup mode
+
+Method 3 (Manual Reset):
+If methods 1-2 don't work, you can always re-flash the device with the original binary file.
 
 ## Understanding Air Quality Values
 

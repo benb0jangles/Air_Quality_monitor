@@ -83,7 +83,7 @@ Follow our [GitHub Pages Setup Guide](https://docs.github.com/en/pages/getting-s
 
 ## Esp32 Code Installation
 ### Direct Binary Upload:
-If you want to get iot thingspeak connectivity running without compiling code:
+If you want to get iot thingspeak connectivity running with wifi connectivity features:
 
 1. Download `esp32c3supermini_scd41_sgp41_pms5003_oled_ble_webserver.ino.bin` from this repository
 2. Connect your ESP32-C3 Super Mini to your computer

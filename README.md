@@ -107,7 +107,7 @@ When you first power up the device, it automatically enters setup mode:
 
 - After saving, the device will restart and connect to your WiFi network
 - The OLED will now show sensor readings (or "No sensors" if sensors aren't connected yet)
-- Data will upload to Thingspeak every 1 min, and be displayed in your github-pages page.
+- Data will upload to Thingspeak every 1 min, and be displayed in your github-pages page (see a live example in the link just below the banner at the top of the readme).
 
 ### Re-entering Setup Mode
 If you need to change WiFi settings later:

@@ -103,11 +103,7 @@ When you first power up the device, it automatically enters setup mode:
 - Open any web browser and go to: http://192.168.4.1
 - You'll see a configuration form to enter:
 
-- Your home WiFi network name
-- Your home WiFi password
-- Your ThingSpeak Channel ID
-- Your ThingSpeak Write API Key
-
+![setup_webpage_input](https://github.com/benb0jangles/Air_Quality_monitor/blob/main/PICS/Screenshot%202025-05-20%20222617%20(Small).png)
 
 - After saving, the device will restart and connect to your WiFi network
 - The OLED will now show sensor readings (or "No sensors" if sensors aren't connected yet)

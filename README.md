@@ -46,7 +46,7 @@ A comprehensive indoor air quality monitoring system built with ESP32-C3 Super M
 ## Installation (non-iot version- no wifi or thingspeak connectivity, just oled display)
 
 ### Direct Binary Upload:
-If you just want to get the monitor running without compiling code:
+If you just want to get the monitor running without wifi connectivity features:
 
 1. Download `esp32c3supermini_scd41_sgp41_pms5003_oled_no_IOT.ino.bin` from this repository
 2. Connect your ESP32-C3 Super Mini to your computer

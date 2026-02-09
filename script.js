@@ -1,223 +1,243 @@
-// ThingSpeak Channel Configuration
-const channelID = '2944234';  // Replace with your channel ID
-const readAPIKey = 'Y23QWWN6OI2NLQ5E'; // Replace with your Read API Key
-const dataPoints = 20; // Number of data points to fetch
+// ========== CONFIGURATION ==========
+const THINGSPEAK_CHANNEL_ID = '2944234';
+const THINGSPEAK_READ_API_KEY = 'Y23QWWN6OI2NLQ5E';
+// ===================================
 
-// Base URL for ThingSpeak API
-const baseUrl = `https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${readAPIKey}&results=${dataPoints}`;
+let currentTimeRange = '24h';
+let charts = {};
 
-// Chart configuration
-const chartConfig = {
-    type: 'line',
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: false
-            },
-            x: {
-                display: false
-            }
-        },
-        elements: {
-            point: {
-                radius: 2
-            },
-            line: {
-                tension: 0.2
-            }
-        }
-    }
+// Time range configurations (using ThingSpeak 'days' parameter for accurate filtering)
+const timeRanges = {
+    '24h': { days: 1, label: '24 Hours' },
+    '7d': { days: 7, label: '7 Days' },
+    '30d': { days: 30, label: '30 Days' },
+    '1y': { days: 365, label: '1 Year' }
 };
 
-// Chart objects
-const charts = {};
+// Chart color definitions per sensor
+const chartColors = {
+    co2:      { border: 'rgb(75, 192, 192)',  bg: 'rgba(75, 192, 192, 0.1)' },
+    temp:     { border: 'rgb(255, 99, 132)',  bg: 'rgba(255, 99, 132, 0.1)' },
+    humidity: { border: 'rgb(54, 162, 235)',  bg: 'rgba(54, 162, 235, 0.1)' },
+    voc:      { border: 'rgb(153, 102, 255)', bg: 'rgba(153, 102, 255, 0.1)' },
+    nox:      { border: 'rgb(255, 159, 64)',  bg: 'rgba(255, 159, 64, 0.1)' },
+    pm25:     { border: 'rgb(255, 206, 86)',  bg: 'rgba(255, 206, 86, 0.1)' },
+    pm10:     { border: 'rgb(76, 175, 80)',   bg: 'rgba(76, 175, 80, 0.1)' },
+    pm1:      { border: 'rgb(121, 85, 72)',   bg: 'rgba(121, 85, 72, 0.1)' }
+};
 
-// Initialize charts
-function initCharts() {
-    charts.co2 = new Chart(document.getElementById('co2-chart').getContext('2d'), {
-        ...chartConfig,
-        data: {
-            datasets: [{
-                label: 'CO2',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                data: []
-            }]
-        }
+// Field mapping: ThingSpeak field → chart key
+const fieldMap = [
+    { field: 'field1', key: 'co2',      chartId: 'co2Chart',      label: 'CO2 (ppm)',          decimals: 0, elemId: 'currentCo2' },
+    { field: 'field2', key: 'temp',     chartId: 'tempChart',     label: 'Temperature (\u00B0C)', decimals: 1, elemId: 'currentTemp' },
+    { field: 'field3', key: 'humidity', chartId: 'humidityChart', label: 'Humidity (%)',        decimals: 1, elemId: 'currentHumidity' },
+    { field: 'field4', key: 'voc',      chartId: 'vocChart',      label: 'VOC Index',          decimals: 0, elemId: 'currentVoc' },
+    { field: 'field5', key: 'nox',      chartId: 'noxChart',      label: 'NOx Index',          decimals: 0, elemId: 'currentNox' },
+    { field: 'field6', key: 'pm25',     chartId: 'pm25Chart',     label: 'PM2.5 (\u03BCg/m\u00B3)', decimals: 1, elemId: 'currentPm25' },
+    { field: 'field7', key: 'pm10',     chartId: 'pm10Chart',     label: 'PM10 (\u03BCg/m\u00B3)',  decimals: 1, elemId: 'currentPm10' },
+    { field: 'field8', key: 'pm1',      chartId: 'pm1Chart',      label: 'PM1.0 (\u03BCg/m\u00B3)', decimals: 1, elemId: 'currentPm1' }
+];
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    initializeEventListeners();
+    loadData();
+
+    // Auto-refresh every 5 minutes
+    setInterval(() => {
+        loadData();
+    }, 5 * 60 * 1000);
+});
+
+function initializeEventListeners() {
+    document.querySelectorAll('.range-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentTimeRange = e.target.dataset.range;
+            loadData();
+        });
     });
-    
-    charts.temp = new Chart(document.getElementById('temp-chart').getContext('2d'), {
-        ...chartConfig,
-        data: {
-            datasets: [{
-                label: 'Temperature',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                data: []
-            }]
-        }
+
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+        loadData();
     });
-    
-    charts.humidity = new Chart(document.getElementById('humidity-chart').getContext('2d'), {
-        ...chartConfig,
-        data: {
-            datasets: [{
-                label: 'Humidity',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                data: []
-            }]
+}
+
+async function loadData() {
+    const range = timeRanges[currentTimeRange];
+    const url = buildThingSpeakURL(range.days);
+
+    try {
+        document.getElementById('lastUpdate').textContent = 'Loading...';
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch data');
+
+        const data = await response.json();
+
+        if (!data.feeds || data.feeds.length === 0) {
+            throw new Error('No data available');
         }
-    });
-    
-    charts.voc = new Chart(document.getElementById('voc-chart').getContext('2d'), {
-        ...chartConfig,
-        data: {
-            datasets: [{
-                label: 'VOC Index',
-                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                data: []
-            }]
-        }
-    });
-    
-    charts.nox = new Chart(document.getElementById('nox-chart').getContext('2d'), {
-        ...chartConfig,
-        data: {
-            datasets: [{
-                label: 'NOx Index',
-                backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                borderColor: 'rgba(255, 159, 64, 1)',
-                data: []
-            }]
-        }
-    });
-    
-    charts.pm25 = new Chart(document.getElementById('pm25-chart').getContext('2d'), {
-        ...chartConfig,
-        data: {
-            datasets: [{
-                label: 'PM2.5',
-                backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                borderColor: 'rgba(255, 206, 86, 1)',
-                data: []
-            }]
-        }
-    });
-    
-    charts.pm10 = new Chart(document.getElementById('pm10-chart').getContext('2d'), {
-        ...chartConfig,
-        data: {
-            datasets: [{
-                label: 'PM10',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                data: []
-            }]
-        }
-    });
-    
-    charts.pm1 = new Chart(document.getElementById('pm1-chart').getContext('2d'), {
-        ...chartConfig,
-        data: {
-            datasets: [{
-                label: 'PM1.0',
-                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                borderColor: 'rgba(153, 102, 255, 1)',
-                data: []
-            }]
+
+        updateCurrentValues(data.feeds[data.feeds.length - 1]);
+        updateCharts(data.feeds);
+        updateStatusIndicators(data.feeds[data.feeds.length - 1]);
+        updateLastUpdateTime(data.feeds[data.feeds.length - 1].created_at);
+
+    } catch (error) {
+        console.error('Error loading data:', error);
+        document.getElementById('lastUpdate').textContent = 'Error loading data';
+    }
+}
+
+function buildThingSpeakURL(days) {
+    let url = `https://api.thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/feeds.json?days=${days}`;
+    if (THINGSPEAK_READ_API_KEY) {
+        url += `&api_key=${THINGSPEAK_READ_API_KEY}`;
+    }
+    return url;
+}
+
+function updateCurrentValues(latestData) {
+    fieldMap.forEach(f => {
+        const el = document.getElementById(f.elemId);
+        if (el) {
+            el.textContent = latestData[f.field]
+                ? parseFloat(latestData[f.field]).toFixed(f.decimals)
+                : '--';
         }
     });
 }
 
-// Update chart data
-function updateCharts(data) {
-    const timestamps = data.map(entry => new Date(entry.created_at).toLocaleTimeString());
-    
-    // CO2 Data (Field 1)
-    const co2Data = data.map(entry => parseFloat(entry.field1 || 0));
-    charts.co2.data.labels = timestamps;
-    charts.co2.data.datasets[0].data = co2Data;
-    charts.co2.update();
-    
-    // Temperature Data (Field 2)
-    const tempData = data.map(entry => parseFloat(entry.field2 || 0));
-    charts.temp.data.labels = timestamps;
-    charts.temp.data.datasets[0].data = tempData;
-    charts.temp.update();
-    
-    // Humidity Data (Field 3)
-    const humidityData = data.map(entry => parseFloat(entry.field3 || 0));
-    charts.humidity.data.labels = timestamps;
-    charts.humidity.data.datasets[0].data = humidityData;
-    charts.humidity.update();
-    
-    // VOC Index Data (Field 4)
-    const vocData = data.map(entry => parseFloat(entry.field4 || 0));
-    charts.voc.data.labels = timestamps;
-    charts.voc.data.datasets[0].data = vocData;
-    charts.voc.update();
-    
-    // NOx Index Data (Field 5)
-    const noxData = data.map(entry => parseFloat(entry.field5 || 0));
-    charts.nox.data.labels = timestamps;
-    charts.nox.data.datasets[0].data = noxData;
-    charts.nox.update();
-    
-    // PM2.5 Data (Field 6)
-    const pm25Data = data.map(entry => parseFloat(entry.field6 || 0));
-    charts.pm25.data.labels = timestamps;
-    charts.pm25.data.datasets[0].data = pm25Data;
-    charts.pm25.update();
-    
-    // PM10 Data (Field 7)
-    const pm10Data = data.map(entry => parseFloat(entry.field7 || 0));
-    charts.pm10.data.labels = timestamps;
-    charts.pm10.data.datasets[0].data = pm10Data;
-    charts.pm10.update();
-    
-    // PM1.0 Data (Field 8)
-    const pm1Data = data.map(entry => parseFloat(entry.field8 || 0));
-    charts.pm1.data.labels = timestamps;
-    charts.pm1.data.datasets[0].data = pm1Data;
-    charts.pm1.update();
-    
-    // Update current values
-    const latestEntry = data[data.length - 1];
-    document.getElementById('current-co2').textContent = latestEntry.field1 || '--';
-    document.getElementById('current-temp').textContent = latestEntry.field2 || '--';
-    document.getElementById('current-humidity').textContent = latestEntry.field3 || '--';
-    document.getElementById('current-voc').textContent = latestEntry.field4 || '--';
-    document.getElementById('current-nox').textContent = latestEntry.field5 || '--';
-    document.getElementById('current-pm25').textContent = latestEntry.field6 || '--';
-    document.getElementById('current-pm10').textContent = latestEntry.field7 || '--';
-    document.getElementById('current-pm1').textContent = latestEntry.field8 || '--';
-    
-    // Update last update time
-    document.getElementById('last-update').textContent = new Date().toLocaleString();
-    
-    // Update status indicators
-    updateStatus('co2', parseFloat(latestEntry.field1 || 0));
-    updateStatus('voc', parseFloat(latestEntry.field4 || 0));
-    updateStatus('nox', parseFloat(latestEntry.field5 || 0));
-    updateStatus('pm25', parseFloat(latestEntry.field6 || 0));
-    updateStatus('pm10', parseFloat(latestEntry.field7 || 0));
+function updateCharts(feeds) {
+    const labels = feeds.map(feed => new Date(feed.created_at));
+
+    fieldMap.forEach(f => {
+        const data = feeds.map(feed => feed[f.field] ? parseFloat(feed[f.field]) : null);
+        const color = chartColors[f.key];
+        createOrUpdateChart(f.chartId, labels, {
+            label: f.label,
+            data: data,
+            borderColor: color.border,
+            backgroundColor: color.bg
+        });
+    });
 }
 
-// Update status indicators
+function createOrUpdateChart(chartId, labels, dataset) {
+    const canvas = document.getElementById(chartId);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    if (charts[chartId]) {
+        charts[chartId].destroy();
+    }
+
+    charts[chartId] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: dataset.label,
+                data: dataset.data,
+                borderColor: dataset.borderColor,
+                backgroundColor: dataset.backgroundColor,
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                pointRadius: 2,
+                pointHoverRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    padding: 12,
+                    titleFont: { size: 14 },
+                    bodyFont: { size: 13 },
+                    callbacks: {
+                        title: function(context) {
+                            const date = new Date(context[0].label);
+                            return date.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        tooltipFormat: 'MMM dd, yyyy HH:mm',
+                        displayFormats: getTimeDisplayFormat()
+                    },
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 0,
+                        autoSkip: true,
+                        maxTicksLimit: 10
+                    },
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toFixed(1);
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function getTimeDisplayFormat() {
+    switch (currentTimeRange) {
+        case '24h':
+            return { hour: 'HH:mm', minute: 'HH:mm' };
+        case '7d':
+            return { day: 'MMM dd', hour: 'MMM dd HH:mm' };
+        case '30d':
+            return { day: 'MMM dd', week: 'MMM dd' };
+        case '1y':
+            return { month: 'MMM yyyy', day: 'MMM dd' };
+        default:
+            return { day: 'MMM dd' };
+    }
+}
+
+function updateStatusIndicators(latestData) {
+    updateStatus('co2', parseFloat(latestData.field1 || 0));
+    updateStatus('voc', parseFloat(latestData.field4 || 0));
+    updateStatus('nox', parseFloat(latestData.field5 || 0));
+    updateStatus('pm25', parseFloat(latestData.field6 || 0));
+    updateStatus('pm10', parseFloat(latestData.field7 || 0));
+}
+
 function updateStatus(type, value) {
     const statusElement = document.getElementById(`${type}-status`);
+    if (!statusElement) return;
+
     let status = 'Unknown';
     let className = '';
-    
+
     if (type === 'co2') {
         if (value < 800) {
             status = 'Excellent';
@@ -257,7 +277,7 @@ function updateStatus(type, value) {
             status = 'Moderate';
             className = 'good';
         } else if (value <= 55) {
-            status = 'Unhealthy for Sensitive Groups';
+            status = 'Unhealthy (Sensitive)';
             className = 'moderate';
         } else if (value <= 150) {
             status = 'Unhealthy';
@@ -274,7 +294,7 @@ function updateStatus(type, value) {
             status = 'Moderate';
             className = 'good';
         } else if (value <= 254) {
-            status = 'Unhealthy for Sensitive Groups';
+            status = 'Unhealthy (Sensitive)';
             className = 'moderate';
         } else if (value <= 354) {
             status = 'Unhealthy';
@@ -284,30 +304,28 @@ function updateStatus(type, value) {
             className = 'very-poor';
         }
     }
-    
+
     statusElement.textContent = status;
     statusElement.className = `status ${className}`;
 }
 
-// Fetch data from ThingSpeak
-function fetchData() {
-    fetch(baseUrl)
-        .then(response => response.json())
-        .then(data => {
-            if (data.feeds && data.feeds.length > 0) {
-                updateCharts(data.feeds);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-}
+function updateLastUpdateTime(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMinutes = Math.floor((now - date) / 60000);
 
-// Initialize on document load
-document.addEventListener('DOMContentLoaded', () => {
-    initCharts();
-    fetchData();
-    
-    // Refresh data every 1 minute
-    setInterval(fetchData, 60000);
-});
+    let timeAgo;
+    if (diffMinutes < 1) {
+        timeAgo = 'Just now';
+    } else if (diffMinutes < 60) {
+        timeAgo = `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+    } else if (diffMinutes < 1440) {
+        const hours = Math.floor(diffMinutes / 60);
+        timeAgo = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else {
+        const days = Math.floor(diffMinutes / 1440);
+        timeAgo = `${days} day${days > 1 ? 's' : ''} ago`;
+    }
+
+    document.getElementById('lastUpdate').textContent = `Last update: ${timeAgo}`;
+}

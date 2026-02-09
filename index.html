@@ -3,110 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Environmental Monitor Dashboard</title>
+    <title>Air Quality Monitor Dashboard</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Environmental Monitor Dashboard</h1>
-            <p>Last updated: <span id="last-update">Loading...</span></p>
+            <h1>Air Quality Monitor</h1>
+            <p class="subtitle">Real-Time Environmental Sensing with ESP32-C3 + SCD41, SGP41, PMS5003</p>
         </header>
-        
-        <div class="dashboard">
-            <div class="card">
-                <h2>CO2 Levels</h2>
-                <div class="chart-container">
-                    <canvas id="co2-chart"></canvas>
-                </div>
-                <div class="current-value">
-                    <span id="current-co2">--</span> ppm
-                </div>
-                <div class="status" id="co2-status">--</div>
+
+        <div class="controls">
+            <div class="time-range-selector">
+                <button class="range-btn active" data-range="24h">24 Hours</button>
+                <button class="range-btn" data-range="7d">7 Days</button>
+                <button class="range-btn" data-range="30d">30 Days</button>
+                <button class="range-btn" data-range="1y">1 Year</button>
             </div>
-            
-            <div class="card">
-                <h2>Temperature</h2>
-                <div class="chart-container">
-                    <canvas id="temp-chart"></canvas>
-                </div>
-                <div class="current-value">
-                    <span id="current-temp">--</span> °C
-                </div>
-            </div>
-            
-            <div class="card">
-                <h2>Humidity</h2>
-                <div class="chart-container">
-                    <canvas id="humidity-chart"></canvas>
-                </div>
-                <div class="current-value">
-                    <span id="current-humidity">--</span> %
-                </div>
-            </div>
-            
-            <div class="card">
-                <h2>Air Quality (VOC)</h2>
-                <div class="chart-container">
-                    <canvas id="voc-chart"></canvas>
-                </div>
-                <div class="current-value">
-                    <span id="current-voc">--</span>
-                </div>
-                <div class="status" id="voc-status">--</div>
-            </div>
-            
-            <div class="card">
-                <h2>Air Quality (NOx)</h2>
-                <div class="chart-container">
-                    <canvas id="nox-chart"></canvas>
-                </div>
-                <div class="current-value">
-                    <span id="current-nox">--</span>
-                </div>
-                <div class="status" id="nox-status">--</div>
-            </div>
-            
-            <div class="card">
-                <h2>Particulate Matter (PM2.5)</h2>
-                <div class="chart-container">
-                    <canvas id="pm25-chart"></canvas>
-                </div>
-                <div class="current-value">
-                    <span id="current-pm25">--</span> μg/m³
-                </div>
-                <div class="status" id="pm25-status">--</div>
-            </div>
-            
-            <div class="card">
-                <h2>Particulate Matter (PM10)</h2>
-                <div class="chart-container">
-                    <canvas id="pm10-chart"></canvas>
-                </div>
-                <div class="current-value">
-                    <span id="current-pm10">--</span> μg/m³
-                </div>
-                <div class="status" id="pm10-status">--</div>
-            </div>
-            
-            <div class="card">
-                <h2>Particulate Matter (PM1.0)</h2>
-                <div class="chart-container">
-                    <canvas id="pm1-chart"></canvas>
-                </div>
-                <div class="current-value">
-                    <span id="current-pm1">--</span> μg/m³
-                </div>
+
+            <div class="status-bar">
+                <span id="lastUpdate">Loading data...</span>
+                <button id="refreshBtn" class="refresh-btn">&#8635; Refresh</button>
             </div>
         </div>
-        
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">&#9729;</div>
+                <div class="stat-label">CO2</div>
+                <div class="stat-value" id="currentCo2">--</div>
+                <div class="stat-unit">ppm</div>
+                <div class="status" id="co2-status">--</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">&#127777;</div>
+                <div class="stat-label">Temperature</div>
+                <div class="stat-value" id="currentTemp">--</div>
+                <div class="stat-unit">&deg;C</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">&#128167;</div>
+                <div class="stat-label">Humidity</div>
+                <div class="stat-value" id="currentHumidity">--</div>
+                <div class="stat-unit">%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">&#127981;</div>
+                <div class="stat-label">VOC Index</div>
+                <div class="stat-value" id="currentVoc">--</div>
+                <div class="stat-unit">index</div>
+                <div class="status" id="voc-status">--</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">&#9889;</div>
+                <div class="stat-label">NOx Index</div>
+                <div class="stat-value" id="currentNox">--</div>
+                <div class="stat-unit">index</div>
+                <div class="status" id="nox-status">--</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">&#9679;</div>
+                <div class="stat-label">PM2.5</div>
+                <div class="stat-value" id="currentPm25">--</div>
+                <div class="stat-unit">&mu;g/m&sup3;</div>
+                <div class="status" id="pm25-status">--</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">&#9711;</div>
+                <div class="stat-label">PM10</div>
+                <div class="stat-value" id="currentPm10">--</div>
+                <div class="stat-unit">&mu;g/m&sup3;</div>
+                <div class="status" id="pm10-status">--</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">&#8226;</div>
+                <div class="stat-label">PM1.0</div>
+                <div class="stat-value" id="currentPm1">--</div>
+                <div class="stat-unit">&mu;g/m&sup3;</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>CO2 Levels</h3>
+                <canvas id="co2Chart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>Temperature</h3>
+                <canvas id="tempChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>Humidity</h3>
+                <canvas id="humidityChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>VOC Index</h3>
+                <canvas id="vocChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>NOx Index</h3>
+                <canvas id="noxChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>PM2.5</h3>
+                <canvas id="pm25Chart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>PM10</h3>
+                <canvas id="pm10Chart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3>PM1.0</h3>
+                <canvas id="pm1Chart"></canvas>
+            </div>
+        </div>
+
         <footer>
-            <p>Powered by ESP32-C3 with SCD41, SGP41, and PMS5003 sensors | Data stored on ThingSpeak</p>
+            <p>Data from ESP32-C3 with SCD41, SGP41, and PMS5003 sensors</p>
+            <p class="tech-note">Powered by IoT Sensor + ThingSpeak + GitHub Pages</p>
         </footer>
     </div>
-    
+
     <script src="script.js"></script>
 </body>
 </html>

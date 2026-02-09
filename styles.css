@@ -148,6 +148,33 @@ header h1 {
     box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
 }
 
+.trendline-btn {
+    padding: 10px 20px;
+    border: 2px solid #E53935;
+    background: white;
+    color: #E53935;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(229, 57, 53, 0.1);
+}
+
+.trendline-btn:hover {
+    background: linear-gradient(135deg, #E53935, #EF5350);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(229, 57, 53, 0.2);
+}
+
+.trendline-btn.active {
+    background: linear-gradient(135deg, #C62828, #E53935);
+    color: white;
+    border-color: #C62828;
+    box-shadow: 0 4px 12px rgba(229, 57, 53, 0.3);
+}
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));

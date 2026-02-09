@@ -4,7 +4,9 @@ const THINGSPEAK_READ_API_KEY = 'Y23QWWN6OI2NLQ5E';
 // ===================================
 
 let currentTimeRange = '24h';
+let showTrendline = false;
 let charts = {};
+let lastFeeds = null; // cached for trendline toggle without refetch
 
 // Time range configurations
 // Your sensor sends data every ~1 minute (~1,422 entries/day).
@@ -65,6 +67,14 @@ function initializeEventListeners() {
     document.getElementById('refreshBtn').addEventListener('click', () => {
         loadData();
     });
+
+    document.getElementById('trendlineBtn').addEventListener('click', (e) => {
+        showTrendline = !showTrendline;
+        e.target.classList.toggle('active', showTrendline);
+        if (lastFeeds) {
+            updateCharts(lastFeeds);
+        }
+    });
 }
 
 async function loadData() {
@@ -83,8 +93,7 @@ async function loadData() {
             throw new Error('No data available');
         }
 
-        // For averaged ranges, stat cards still show the latest averaged value.
-        // The current values update from the most recent data point returned.
+        lastFeeds = data.feeds;
         updateCurrentValues(data.feeds[data.feeds.length - 1]);
         updateCharts(data.feeds);
         updateStatusIndicators(data.feeds[data.feeds.length - 1]);
@@ -142,21 +151,37 @@ function createOrUpdateChart(chartId, labels, dataset) {
         charts[chartId].destroy();
     }
 
+    const datasets = [{
+        label: dataset.label,
+        data: dataset.data,
+        borderColor: dataset.borderColor,
+        backgroundColor: dataset.backgroundColor,
+        borderWidth: 2,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 2,
+        pointHoverRadius: 5
+    }];
+
+    if (showTrendline) {
+        const trendData = computeLinearTrend(dataset.data);
+        datasets.push({
+            label: 'Trend',
+            data: trendData,
+            borderColor: 'rgba(255, 0, 0, 0.6)',
+            borderWidth: 2,
+            borderDash: [8, 4],
+            pointRadius: 0,
+            fill: false,
+            tension: 0
+        });
+    }
+
     charts[chartId] = new Chart(ctx, {
         type: 'line',
         data: {
             labels: labels,
-            datasets: [{
-                label: dataset.label,
-                data: dataset.data,
-                borderColor: dataset.borderColor,
-                backgroundColor: dataset.backgroundColor,
-                borderWidth: 2,
-                tension: 0.4,
-                fill: true,
-                pointRadius: 2,
-                pointHoverRadius: 5
-            }]
+            datasets: datasets
         },
         options: {
             responsive: true,
@@ -216,6 +241,34 @@ function createOrUpdateChart(chartId, labels, dataset) {
     });
 }
 
+// Compute linear regression trendline (least squares)
+function computeLinearTrend(data) {
+    const valid = [];
+    data.forEach((v, i) => {
+        if (v !== null && !isNaN(v)) {
+            valid.push({ x: i, y: v });
+        }
+    });
+
+    if (valid.length < 2) return data.map(() => null);
+
+    const n = valid.length;
+    let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+    for (const p of valid) {
+        sumX += p.x;
+        sumY += p.y;
+        sumXY += p.x * p.y;
+        sumXX += p.x * p.x;
+    }
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+
+    return data.map((v, i) => {
+        return parseFloat((slope * i + intercept).toFixed(4));
+    });
+}
+
 function getTimeDisplayFormat() {
     switch (currentTimeRange) {
         case '24h':
@@ -223,7 +276,7 @@ function getTimeDisplayFormat() {
         case '7d':
             return { day: 'MMM dd', hour: 'MMM dd HH:mm' };
         case '30d':
-            return { day: 'MMM dd', week: 'MMM dd' };
+            return { hour: 'MMM dd', day: 'MMM dd', week: 'MMM dd' };
         case '1y':
             return { month: 'MMM yyyy', day: 'MMM dd' };
         default:

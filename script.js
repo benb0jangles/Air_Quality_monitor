@@ -6,12 +6,15 @@ const THINGSPEAK_READ_API_KEY = 'Y23QWWN6OI2NLQ5E';
 let currentTimeRange = '24h';
 let charts = {};
 
-// Time range configurations (using ThingSpeak 'days' parameter for accurate filtering)
+// Time range configurations
+// Your sensor sends data every ~1 minute (~1,422 entries/day).
+// ThingSpeak caps responses at 8,000 entries, so longer ranges need
+// the 'average' parameter to downsample and stay under the cap.
 const timeRanges = {
-    '24h': { days: 1, label: '24 Hours' },
-    '7d': { days: 7, label: '7 Days' },
-    '30d': { days: 30, label: '30 Days' },
-    '1y': { days: 365, label: '1 Year' }
+    '24h': { days: 1,   average: 0,    label: '24 Hours' },     // ~1,422 pts (raw, no averaging)
+    '7d':  { days: 7,   average: 10,   label: '7 Days' },       // ~1,008 pts (10-min averages)
+    '30d': { days: 30,  average: 60,   label: '30 Days' },      // ~720 pts (hourly averages)
+    '1y':  { days: 365, average: 1440, label: '1 Year' }        // ~365 pts (daily averages)
 };
 
 // Chart color definitions per sensor
@@ -66,7 +69,7 @@ function initializeEventListeners() {
 
 async function loadData() {
     const range = timeRanges[currentTimeRange];
-    const url = buildThingSpeakURL(range.days);
+    const url = buildThingSpeakURL(range.days, range.average);
 
     try {
         document.getElementById('lastUpdate').textContent = 'Loading...';
@@ -80,6 +83,8 @@ async function loadData() {
             throw new Error('No data available');
         }
 
+        // For averaged ranges, stat cards still show the latest averaged value.
+        // The current values update from the most recent data point returned.
         updateCurrentValues(data.feeds[data.feeds.length - 1]);
         updateCharts(data.feeds);
         updateStatusIndicators(data.feeds[data.feeds.length - 1]);
@@ -91,8 +96,11 @@ async function loadData() {
     }
 }
 
-function buildThingSpeakURL(days) {
+function buildThingSpeakURL(days, average) {
     let url = `https://api.thingspeak.com/channels/${THINGSPEAK_CHANNEL_ID}/feeds.json?days=${days}`;
+    if (average > 0) {
+        url += `&average=${average}`;
+    }
     if (THINGSPEAK_READ_API_KEY) {
         url += `&api_key=${THINGSPEAK_READ_API_KEY}`;
     }
